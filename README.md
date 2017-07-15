@@ -10,7 +10,7 @@
 - Linux is perfered, Windows is also OK
 
 ## Usage
-- After package, you can rename conf/config.properties.sample to conf/config.properties and change config in it
+- Before package, you should rename /src/main/resources/config.properties.sample to config.properties and change config in it
 
 ```
 mvn package
