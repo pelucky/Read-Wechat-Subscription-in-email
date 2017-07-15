@@ -56,7 +56,8 @@ public class Spider {
             System.out.println("Begin Crawl " + name + " For latest " + lastDays + " Days Articles! Please wait...");
             pageCount = 0;
             continueFlag = true;
-            while (continueFlag) {
+            // At most crawl 20 pages
+            while (continueFlag & pageCount <= 240) {
                 try {
                     int retryTimes = 0;
                     String totalURL = getURL(name);
@@ -69,8 +70,8 @@ public class Spider {
                         statusCode = responseData.entrySet().iterator().next().getValue();
                     }
                     while (responseData == null | statusCode >= 400 & retryTimes < 3) {
-                        // Sleep 2s for retry
-                        Thread.sleep(2000);
+                        // Sleep 5s for retry
+                        Thread.sleep(5000);
                         responseData.clear();
                         responseData = getContent(totalURL);
                         content = responseData.entrySet().iterator().next().getKey();
@@ -126,6 +127,7 @@ public class Spider {
         HttpGet httpGet = new HttpGet(totalURL);
         httpGet.addHeader("User-Agent",
                 "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+        httpGet.addHeader("Content-Type", "text/html; charset=UTF-8");
         httpGet.setConfig(requestConfig);
         CloseableHttpResponse httpResponse = null;
 
@@ -163,8 +165,11 @@ public class Spider {
                 String linkDate = element.child(0).child(1).text();
                 if (isInDate(linkDate, lastDays)) {
                     // Trim space in LinkText's tilte
-                    articleInfo.put("(" + URL + linkHref + ")", "[" + linkDate + " "
-                            + new String(linkText.getBytes(), "GBK").replace('?', ' ').replace('　', ' ') + "]");
+                    // articleInfo.put("(" + URL + linkHref + ")", "[" +
+                    // linkDate + " "
+                    // + new String(linkText.getBytes(), "GBK").replace('?', '
+                    // ').replace(' ', ' ') + "]");
+                    articleInfo.put("(" + URL + linkHref + ")", "[" + linkDate + " " + linkText + "]");
                 } else {
                     continueFlag = false;
                     break;

@@ -7,6 +7,9 @@
 	<name>wxSubscriptionSpider</name>
 	<description>Crawl aritcle from wxSubscription
 Crawl articles from wechat subscription</description>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
