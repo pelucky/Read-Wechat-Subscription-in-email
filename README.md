@@ -290,9 +290,10 @@
 - Before package, you should rename /src/main/resources/config.properties.sample to config.properties and change config in it
 
 ```
-mvn package
+mvn  clean package
 cd target
-Linux: sh run.sh start
+Linux start:sh run.sh start
+Linux Stop:sh run.sh stop
 Windows: java -cp wxSubscriptionSpider-0.0.1-SNAPSHOT.jar;.\conf com.pelucky.spider.SpiderApp
 ```
 
