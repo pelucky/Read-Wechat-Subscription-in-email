@@ -59,7 +59,11 @@ public class Spider {
                 try {
                     String totalURL = getURL(name);
                     String content = getContent(totalURL);
-                    storeData(content);
+                    if (content != null){
+                        storeData(content);
+                    } else {
+                        continue;
+                    }
                     // Sleep 2s for forbid IP;
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -111,6 +115,7 @@ public class Spider {
         } catch (IOException e) {
             logger.info("{} IOException in get", totalURL);
             e.printStackTrace();
+            return null;
         } finally {
             try {
                 httpResponse.close();
