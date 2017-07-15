@@ -146,7 +146,9 @@ public class Spider {
             return null;
         } finally {
             try {
-                httpResponse.close();
+                if (httpResponse != null) {
+                    httpResponse.close();
+                }
             } catch (IOException e) {
                 logger.info("{} IOException in close", totalURL);
                 e.printStackTrace();
