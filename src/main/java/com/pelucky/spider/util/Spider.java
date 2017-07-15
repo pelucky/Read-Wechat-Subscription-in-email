@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
@@ -48,9 +49,9 @@ public class Spider {
         return sortOfArticles;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked" })
     public void startSpirder() {
-        logger.info("Strat Spider...");
+        logger.info("Start Spider...");
         for (String name : subscriptionName) {
             System.out.println("Begin Crawl " + name + " For latest " + lastDays + " Days Articles! Please wait...");
             pageCount = 0;
@@ -59,11 +60,15 @@ public class Spider {
                 try {
                     int retryTimes = 0;
                     String totalURL = getURL(name);
+                    String content = "";
+                    int statusCode = 0;
 
-                    LinkedHashMap<String, Integer> responseData = getContent(totalURL);
-                    String content = responseData.entrySet().iterator().next().getKey();
-                    int statusCode = responseData.entrySet().iterator().next().getValue();
-                    while (statusCode >= 500 && retryTimes < 3) {
+                    Map<String, Integer> responseData = getContent(totalURL);
+                    if (responseData != null) {
+                        content = responseData.entrySet().iterator().next().getKey();
+                        statusCode = responseData.entrySet().iterator().next().getValue();
+                    }
+                    while (responseData == null | statusCode >= 400 & retryTimes < 3) {
                         // Sleep 2s for retry
                         Thread.sleep(2000);
                         responseData.clear();
@@ -71,12 +76,14 @@ public class Spider {
                         content = responseData.entrySet().iterator().next().getKey();
                         statusCode = responseData.entrySet().iterator().next().getValue();
                         retryTimes++;
+                        logger.info("{} get {}'s content failed, retries {} time(s).", name, totalURL, retryTimes);
                     }
                     if (statusCode >= 200 && statusCode < 400) {
                         storeData(content);
                     } else {
                         logger.info("Can't get {}'s content in {} after 3 times tries or page is missing!", name,
                                 totalURL);
+                        pageCount += 12;
                         continue;
                     }
 
@@ -113,8 +120,7 @@ public class Spider {
         return totalURL;
     }
 
-    @SuppressWarnings("null")
-    private LinkedHashMap<String, Integer> getContent(String totalURL) {
+    private Map<String, Integer> getContent(String totalURL) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();
         HttpGet httpGet = new HttpGet(totalURL);
@@ -125,12 +131,13 @@ public class Spider {
 
         String content = "";
         int statusCode = 0;
-        LinkedHashMap<String, Integer> responseData = null;
+        Map<String, Integer> responseData = new LinkedHashMap<String, Integer>();
         try {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity entity = httpResponse.getEntity();
             content = EntityUtils.toString(entity);
             statusCode = httpResponse.getStatusLine().getStatusCode();
+            responseData.put(content, statusCode);
         } catch (IOException e) {
             logger.info("{} IOException in get", totalURL);
             e.printStackTrace();
@@ -143,7 +150,6 @@ public class Spider {
                 e.printStackTrace();
             }
         }
-        responseData.put(content, statusCode);
         return responseData;
     }
 
@@ -156,7 +162,9 @@ public class Spider {
                 String linkHref = element.child(0).child(0).attr("href");
                 String linkDate = element.child(0).child(1).text();
                 if (isInDate(linkDate, lastDays)) {
-                    articleInfo.put("(" + URL + linkHref + ")", "[" + linkDate + " " + linkText + "]");
+                    // Trim space in LinkText's tilte
+                    articleInfo.put("(" + URL + linkHref + ")", "[" + linkDate + " "
+                            + new String(linkText.getBytes(), "GBK").replace('?', ' ').replace('　', ' ') + "]");
                 } else {
                     continueFlag = false;
                     break;
