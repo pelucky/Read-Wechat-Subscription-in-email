@@ -57,13 +57,29 @@ public class Spider {
             continueFlag = true;
             while (continueFlag) {
                 try {
+                    int retryTimes = 0;
                     String totalURL = getURL(name);
-                    String content = getContent(totalURL);
-                    if (content != null){
+
+                    LinkedHashMap<String, Integer> responseData = getContent(totalURL);
+                    String content = responseData.entrySet().iterator().next().getKey();
+                    int statusCode = responseData.entrySet().iterator().next().getValue();
+                    while (statusCode >= 500 && retryTimes < 3) {
+                        // Sleep 2s for retry
+                        Thread.sleep(2000);
+                        responseData.clear();
+                        responseData = getContent(totalURL);
+                        content = responseData.entrySet().iterator().next().getKey();
+                        statusCode = responseData.entrySet().iterator().next().getValue();
+                        retryTimes++;
+                    }
+                    if (statusCode >= 200 && statusCode < 400) {
                         storeData(content);
                     } else {
+                        logger.info("Can't get {}'s content in {} after 3 times tries or page is missing!", name,
+                                totalURL);
                         continue;
                     }
+
                     // Sleep 2s for forbid IP;
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -97,7 +113,8 @@ public class Spider {
         return totalURL;
     }
 
-    private String getContent(String totalURL) {
+    @SuppressWarnings("null")
+    private LinkedHashMap<String, Integer> getContent(String totalURL) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();
         HttpGet httpGet = new HttpGet(totalURL);
@@ -107,11 +124,13 @@ public class Spider {
         CloseableHttpResponse httpResponse = null;
 
         String content = "";
+        int statusCode = 0;
+        LinkedHashMap<String, Integer> responseData = null;
         try {
             httpResponse = httpClient.execute(httpGet);
             HttpEntity entity = httpResponse.getEntity();
             content = EntityUtils.toString(entity);
-
+            statusCode = httpResponse.getStatusLine().getStatusCode();
         } catch (IOException e) {
             logger.info("{} IOException in get", totalURL);
             e.printStackTrace();
@@ -124,7 +143,8 @@ public class Spider {
                 e.printStackTrace();
             }
         }
-        return content;
+        responseData.put(content, statusCode);
+        return responseData;
     }
 
     private void storeData(String content) {
