@@ -52,7 +52,7 @@ public class Spider {
     public void startSpirder() {
         logger.info("Strat Spider...");
         for (String name : subscriptionName) {
-            System.out.println("Begin Crawl " + name + " For latest " + lastDays + " Days Articles!");
+            System.out.println("Begin Crawl " + name + " For latest " + lastDays + " Days Articles! Please wait...");
             pageCount = 0;
             continueFlag = true;
             while (continueFlag) {
@@ -131,7 +131,7 @@ public class Spider {
                 String linkHref = element.child(0).child(0).attr("href");
                 String linkDate = element.child(0).child(1).text();
                 if (isInDate(linkDate, lastDays)) {
-                    articleInfo.put("(" + URL + linkHref + ")", "![" + linkDate + " " + linkText + "]");
+                    articleInfo.put("(" + URL + linkHref + ")", "[" + linkDate + " " + linkText + "]");
                 } else {
                     continueFlag = false;
                     break;
@@ -139,6 +139,7 @@ public class Spider {
             }
             pageCount += 12;
         } catch (Exception e) {
+            logger.info("Content: {}", content);
             continueFlag = false;
             e.printStackTrace();
         }

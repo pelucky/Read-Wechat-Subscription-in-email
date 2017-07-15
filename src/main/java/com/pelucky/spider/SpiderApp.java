@@ -51,7 +51,7 @@ public class SpiderApp {
     private void sendMail(String content) {
         Mail mail = new Mail(readConfig.getHostMail(), readConfig.getFromMail(), readConfig.getPassword());
         String[] recipients = readConfig.getToMail();
-        String subject = "传送门--微信订阅号最近" + readConfig.getLastDays() + "日内容";
+        String subject = "传送门--微信订阅号最近" + Integer.toString(readConfig.getLastDays()) + "日内容";
         List<String> attachmentNames = new ArrayList<String>();
         // attachmentNames.add("C:/Users/pel.2011-20130903HL/Desktop/test.txt");
         if (mail.sendMail(recipients, subject, content, attachmentNames)){

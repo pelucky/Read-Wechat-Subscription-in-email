@@ -48,6 +48,7 @@ public class Mail {
             logger.info("{} UnsupportedEncodingException", str);
             e.printStackTrace();
         }
+        System.out.println("After base64 encode subject: " + str);
         return str;
     }
 
@@ -103,7 +104,8 @@ public class Mail {
             message.setRecipients(Message.RecipientType.TO, iaToList);
 
             // 主题
-            message.setSubject(changeEncode(subject));
+            //message.setSubject(changeEncode(subject));
+            message.setSubject(subject);
 
             // 时间
             message.setSentDate(new Date());
