@@ -15,8 +15,7 @@ public class SpiderApp {
     private ReadConfig readConfig = new ReadConfig();
 
     private String crawlContent() {
-        Spider spider = new Spider(readConfig.getUrl(), readConfig.getLastDays(),
-                readConfig.getWxSubscription());
+        Spider spider = new Spider(readConfig.getUrl(), readConfig.getLastDays(), readConfig.getWxSubscription());
         spider.startSpirder();
         HashMap<String, LinkedHashMap<String, String>> sortOfArticle = spider.getSortOfArticles();
         String content = changeToContent(sortOfArticle);
@@ -32,7 +31,8 @@ public class SpiderApp {
             String name = (String) iterator.next();
             LinkedHashMap<String, String> herfTitle = sortOfArticle.get(name);
             subScriptionCount++;
-            content += "#0x0" + subScriptionCount + " " + name + ":\r\n";
+            content += "#0x0" + subScriptionCount + " " + name + ": " + readConfig.getUrl() + "/account/" + name
+                    + "\r\n";
             int count = 0;
             for (Iterator<String> iterator2 = herfTitle.keySet().iterator(); iterator2.hasNext();) {
                 String herf = (String) iterator2.next();
@@ -54,7 +54,7 @@ public class SpiderApp {
         String subject = "传送门--微信订阅号最近" + Integer.toString(readConfig.getLastDays()) + "日内容";
         List<String> attachmentNames = new ArrayList<String>();
         // attachmentNames.add("C:/Users/pel.2011-20130903HL/Desktop/test.txt");
-        if (mail.sendMail(recipients, subject, content, attachmentNames)){
+        if (mail.sendMail(recipients, subject, content, attachmentNames)) {
             System.out.println("发送邮件成功");
         } else {
             System.out.println("发送邮件失败");

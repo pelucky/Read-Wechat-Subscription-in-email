@@ -171,7 +171,8 @@ public class Spider {
                     // linkDate + " "
                     // + new String(linkText.getBytes(), "GBK").replace('?', '
                     // ').replace(' ', ' ') + "]");
-                    articleInfo.put("(" + URL + linkHref + ")", "[" + linkDate + " " + linkText + "]");
+                    articleInfo.put("(" + URL + linkHref + ")",
+                            "Page" + Integer.toString((pageCount / 12 + 1)) + "| [" + linkDate + " " + linkText + "]");
                 } else {
                     continueFlag = false;
                     break;
