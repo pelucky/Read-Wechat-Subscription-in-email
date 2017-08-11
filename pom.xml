@@ -55,7 +55,7 @@ Crawl articles from wechat subscription</description>
 			<resource>
 				<targetPath>${basedir}/target/conf</targetPath>
 				<filtering>false</filtering>
-				<directory></directory>
+				<directory>${basedir}/src/main/resources</directory>
 				<includes>
 					<include>*</include>
 				</includes>
