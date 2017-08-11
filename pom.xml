@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.pelucky.spider</groupId>
 	<artifactId>wxSubscriptionSpider</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>wxSubscriptionSpider</name>
 	<description>Crawl aritcle from wxSubscription
 Crawl articles from wechat subscription</description>
