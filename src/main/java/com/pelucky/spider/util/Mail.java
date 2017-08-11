@@ -113,7 +113,7 @@ public class Mail {
             Multipart multipart = new MimeMultipart();
             // 添加文本
             BodyPart text = new MimeBodyPart();
-            text.setText(content);
+            text.setContent(content, "text/html; charset=utf-8");
             multipart.addBodyPart(text);
             // 添加附件
             for (String fileName : attachmentNames) {
@@ -126,7 +126,7 @@ public class Mail {
             // 清空附件集合
             attachmentNames.clear();
 
-            message.setContent(multipart);
+            message.setContent(multipart, "text/html; charset=utf-8");
             message.saveChanges();
 
         } catch (Exception e) {

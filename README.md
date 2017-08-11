@@ -1,9 +1,10 @@
 ﻿# Read Wechat Subscription in email
 
 ## What can it do
-- It can collect wechat subscription from [chuansongmen](http://chuansong.me), and send to the email with each content's title and url!
+- It can collect wechat subscription from [aiweibang](http://www.aiweibang.com/), and send to the email with each content's title and url!
 - So you can get rid of your phone and save more times!
-- Thanks to chuansong.me
+- Thanks to aiweibang
+- chuansong.me doesn't update anymore, so I have to change to aiweibang...
 
 ## Result
 
@@ -294,7 +295,7 @@ mvn  clean package
 cd target
 Linux start:sh run.sh start
 Linux Stop:sh run.sh stop
-Windows: java -cp wxSubscriptionSpider-0.0.1-SNAPSHOT.jar;.\conf com.pelucky.spider.SpiderApp
+Windows: java -cp wxSubscriptionSpider-0.1.1-SNAPSHOT.jar;.\conf com.pelucky.spider.SpiderApp
 ```
 
 - Or you can install it in Raspberry PI and crontab to run it
@@ -308,7 +309,7 @@ crontab -e
 ## Configuration
 
 ```
-url=http://chuansong.me
+url=http://top.aiweibang.com
 wxSubscription=linux-cn, wow36kr	    # Subscription's name
 lastDays=7  				    # Collect the latest days
 toMail=xxxxxx@163.com, xxxxxxxx@qq.com      # Send to the receive email
