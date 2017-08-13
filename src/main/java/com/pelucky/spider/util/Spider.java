@@ -146,7 +146,7 @@ public class Spider {
             String likeNum = String.valueOf(data.get("LikeNum"));
 
             if (isInDate(postTime, lastDays)) {
-                articleInfo.put("(" + URL + urlId + " )",
+                articleInfo.put("(" + URL + urlId + " &nbsp;)",
                         "Page" + pageIndex + "| [" + postTime + "| <strong>" + title + "</strong> (" + readNum + "|" + likeNum + ")]");
             } else {
                 continueFlag = false;
